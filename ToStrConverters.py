@@ -1,13 +1,9 @@
 def matrix_to_str(a):    
     result = ''
-    for i in range(0, a.shape[0]):
-        for j in range(0, a.shape[1]):
-            result += str(a[i, j]) + ' '
-        result += '\n'
+    for item in a:        
+        result += ''.join(str(e) + ' ' for e in item) + '\n'        
     return result
 
 def vector_to_str(v):
-    result = ''
-    for i in range(0, v.shape[0]):        
-        result += str(v[i]) + ' '        
+    result = ''.join(str(e) + ' ' for e in v)            
     return '{ ' + result + '}'
