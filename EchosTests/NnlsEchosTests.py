@@ -1,11 +1,15 @@
+import os
+
 import numpy as np
 from scipy.optimize import nnls
 
 from lsqgen import *
 
-echos_file = 'd:\\Projects\\Python\\NNLSResearch\\EchosTests\\test_echos.mtr'
-kernel_file = 'd:\\Projects\\Python\\NNLSResearch\\EchosTests\\test_matrix.mtr'
-solution_file = 'd:\\Projects\\Python\\NNLSResearch\\EchosTests\\test_solutions.mtr'
+current_path = os.path.dirname(os.path.realpath(__file__))
+
+echos_file = os.path.join(current_path, 'test_echos.mtr')
+kernel_file = os.path.join(current_path, 'test_matrix.mtr')
+solution_file = os.path.join(current_path, 'test_solutions.mtr')
 
 echos = get_vectors_from_file(echos_file)
 kernel = get_matrix_from_file(kernel_file)
@@ -19,15 +23,25 @@ sol = []
 counter = 1
 for echo in echos:
     sol.append(nnls(kernel, echo))
-    print('Completed ', counter, ' of ', echos_len)
+    if counter % 10 == 0:
+        print('Completed ', counter, ' of ', echos_len)
     counter += 1
 
+print('Process is completed ', counter - 1, ' of ', echos_len)
+
 i = 0
+tol_flag = True
+index_of_wrong_solution = -1
 for i in range(len(echos)):
-    if np.allclose(ext_sols[i], sol[i][0], atol = 1e-10) :
-        print("All right")
-    else:
-        print('Very bad!!!')
-        raise RuntimeError('Very bad!!!')
+    if not np.allclose(ext_sols[i], sol[i][0], atol=1e-10):
+        tol_flag = False
+        index_of_wrong_solution = i
+        break
+
+if tol_flag:
+    print('All solutions within tolerance')
+else:
+    print('Wrong solution: index = ', index_of_wrong_solution)
+
 
 input()
