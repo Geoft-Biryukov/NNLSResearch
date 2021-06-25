@@ -43,5 +43,6 @@ if tol_flag:
 else:
     print('Wrong solution: index = ', index_of_wrong_solution)
 
+print("Hello")
 
 input()
